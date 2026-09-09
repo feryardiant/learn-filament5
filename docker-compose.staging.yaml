@@ -1,0 +1,50 @@
+services:
+  app:
+    extends:
+      file: docker/compose.yaml
+      service: app
+    build:
+      context: .
+      dockerfile: docker/staging/Dockerfile
+      args:
+        USER_ID: ${WWW_USER:-$(id -u)}
+        GROUP_ID: ${WWW_GROUP:-$(id -g)}
+        PHP_VERSION: ${PHP_VERSION:-8.5}
+        BASE_OS: ${BASE_OS:-alpine}
+        BASE_VERSION: ${BASE_VERSION:-3.23}
+    image: ghcr.io/feryardiant/learn-filament5:staging
+    ports:
+      - ${APP_PORT:-8080}:8080
+
+  scheduler:
+    extends:
+      file: docker/compose.yaml
+      service: worker
+    container_name: workorder-scheduler
+    command: [php, /var/www/html/artisan, schedule:work]
+    healthcheck:
+      test: [CMD, healthcheck-schedule]
+
+  queue:
+    extends:
+      file: docker/compose.yaml
+      service: worker
+    container_name: workorder-queue
+    command: [php, /var/www/html/artisan, queue:work, --tries=3]
+    healthcheck:
+      test: [CMD, healthcheck-queue]
+
+  pgsql:
+    extends:
+      file: docker/compose.yaml
+      service: pgsql
+
+  mailpit:
+    extends:
+      file: docker/compose.yaml
+      service: mailpit
+
+networks:
+  default:
+    name: workorder-dev
+    enable_ipv6: false

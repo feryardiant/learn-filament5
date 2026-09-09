@@ -1,5 +1,5 @@
 {
-    "name": "creasico/learn-filament",
+    "name": "feryardiant/learn-filament5",
     "type": "project",
     "description": "Learning a Laravel 13 with Filament 5.",
     "keywords": ["laravel", "filament"],
@@ -19,7 +19,6 @@
         "laravel/pail": "^1.2.5",
         "laravel/pao": "^1.0.6",
         "laravel/pint": "^1.27",
-        "laravel/sail": "^1.53",
         "mockery/mockery": "^1.6",
         "nunomaduro/collision": "^8.9.3",
         "pestphp/pest": "^5.1",
