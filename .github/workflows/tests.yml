@@ -6,6 +6,10 @@ on:
   pull_request:
     branches: [main]
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.workflow_run.head_branch }}
+  cancel-in-progress: true
+
 jobs:
   prepare:
     name: Prepare
@@ -118,6 +122,7 @@ jobs:
     uses: projek-xyz/actions/.github/workflows/docker.yml@enhance-builds
     with:
       artifact-name: build-staging
+      artifact-path: public
       build-args: |
         BASE_OS=${{ vars.BASE_OS || 'alpine' }}
         BASE_VERSION=${{ vars.BASE_VERSION || '3.23' }}
