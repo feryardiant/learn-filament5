@@ -15,12 +15,14 @@ USER root
 ARG USER_ID
 ARG GROUP_ID
 
-ENV APP_WORKERS_ENABLED=true
-ENV AUTORUN_ENABLED=true AUTORUN_LARAVEL_STORAGE_LINK=false APP_WORKERS_ENABLED=false
+ENV APP_WORKERS_ENABLED=true \
+    AUTORUN_ENABLED=true \
+    AUTORUN_LARAVEL_STORAGE_LINK=false \
+    APP_WORKERS_ENABLED=false
 
 # Install additional php extensions
 # https://github.com/mlocati/docker-php-extension-installer?tab=readme-ov-file
-RUN install-php-extensions excimer gd && \
+RUN install-php-extensions excimer gd intl && \
     chown www-data:www-data /etc/s6-overlay/s6-rc.d/user/contents.d && \
     mv /usr/local/etc/php/conf.d/serversideup-docker-php.ini /usr/local/etc/php/php.ini
 
