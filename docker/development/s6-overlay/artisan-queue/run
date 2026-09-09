@@ -1,0 +1,5 @@
+#!/command/execlineb -P
+
+# Use with-contenv to ensure environment variables are available
+with-contenv
+artisan queue:listen --tries=1 --timeout=0

@@ -1,0 +1,70 @@
+name: Distribute
+run-name: 'dist(${{ github.event.workflow_run.head_branch }}): docker build for `${{ github.event.workflow_run.head_sha }}`'
+
+on:
+  workflow_run:
+    branches: [main]
+    types: [completed]
+    workflows: [Tests]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.workflow_run.head_branch }}
+  cancel-in-progress: true
+
+jobs:
+  prepare:
+    name: Prepare
+    uses: projek-xyz/actions/.github/workflows/prepare.yml@882e6ca4458b1798de42e617c0f0a40eae09dea7
+    with:
+      php-version: ${{ vars.PHP_VERSION || '8.5' }}
+
+    permissions:
+      contents: read
+      pull-requests: write
+
+  build:
+    name: Build
+    if: needs.prepare.outputs.should-build == '1'
+    uses: projek-xyz/actions/.github/workflows/build.yml@882e6ca4458b1798de42e617c0f0a40eae09dea7
+    needs: [prepare]
+    with:
+      branch: ${{ needs.prepare.outputs.target-branch }}
+      build-path: |
+        public/build
+        public/css
+        public/fonts
+        public/js
+        public/vendor
+      composer-cache-dir: ${{ needs.prepare.outputs.composer-cache-dir }}
+      node-pm-name: ${{ needs.prepare.outputs.node-pm-name }}
+      node-pm-version: ${{ needs.prepare.outputs.node-pm-version }}
+      target-env: staging
+      php-version: ${{ vars.PHP_VERSION || '8.5' }}
+
+    permissions:
+      contents: read
+
+  docker:
+    name: Build Docker Images
+    if: needs.prepare.outputs.should-build == '1'
+    uses: projek-xyz/actions/.github/workflows/docker.yml@882e6ca4458b1798de42e617c0f0a40eae09dea7
+    needs: [prepare, build]
+    with:
+      artifact-name: build-staging
+      artifact-path: public
+      build-args: |
+        BASE_OS=${{ vars.BASE_OS || 'alpine' }}
+        BASE_VERSION=${{ vars.BASE_VERSION || '3.23' }}
+        PHP_VERSION=${{ vars.PHP_VERSION || '8.5' }}
+      docker-file: docker/staging/Dockerfile
+      image-tag: ${{ needs.prepare.outputs.project-version }}
+      image-slug: ${{ needs.prepare.outputs.branch-slug }}
+      image-labels: |
+        org.opencontainers.image.author=${{ github.repository_owner }}
+        org.opencontainers.image.licenses=MIT
+
+    permissions:
+      contents: read
+      packages: write
+      id-token: write
+      attestations: write
