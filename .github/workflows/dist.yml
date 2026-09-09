@@ -14,7 +14,7 @@ concurrency:
 jobs:
   prepare:
     name: Prepare
-    uses: projek-xyz/actions/.github/workflows/prepare.yml@enhance-builds
+    uses: projek-xyz/actions/.github/workflows/prepare.yml@882e6ca4458b1798de42e617c0f0a40eae09dea7
     with:
       php-version: ${{ vars.PHP_VERSION || '8.5' }}
 
@@ -25,7 +25,7 @@ jobs:
   build:
     name: Build
     if: needs.prepare.outputs.should-build == '1'
-    uses: projek-xyz/actions/.github/workflows/build.yml@enhance-builds
+    uses: projek-xyz/actions/.github/workflows/build.yml@882e6ca4458b1798de42e617c0f0a40eae09dea7
     needs: [prepare]
     with:
       branch: ${{ needs.prepare.outputs.target-branch }}
@@ -47,7 +47,7 @@ jobs:
   docker:
     name: Build Docker Images
     if: needs.prepare.outputs.should-build == '1'
-    uses: projek-xyz/actions/.github/workflows/docker.yml@enhance-builds
+    uses: projek-xyz/actions/.github/workflows/docker.yml@882e6ca4458b1798de42e617c0f0a40eae09dea7
     needs: [prepare, build]
     with:
       artifact-name: build-staging

@@ -13,7 +13,7 @@ concurrency:
 jobs:
   prepare:
     name: Prepare
-    uses: projek-xyz/actions/.github/workflows/prepare.yml@enhance-builds
+    uses: projek-xyz/actions/.github/workflows/prepare.yml@882e6ca4458b1798de42e617c0f0a40eae09dea7
     with:
       php-version: ${{ vars.PHP_VERSION || '8.5' }}
 
