@@ -9,7 +9,7 @@ on:
 jobs:
   prepare:
     name: Prepare
-    uses: projek-xyz/actions/.github/workflows/configure.yml@enhance-builds
+    uses: projek-xyz/actions/.github/workflows/prepare.yml@enhance-builds
     with:
       php-version: ${{ vars.PHP_VERSION || '8.5' }}
 
@@ -25,6 +25,8 @@ jobs:
       target-env: staging
       branch: ${{ needs.prepare.outputs.target-branch }}
       composer-cache-dir: ${{ needs.prepare.outputs.composer-cache-dir }}
+      node-pm-name: ${{ needs.prepare.outputs.node-pm-name }}
+      node-pm-version: ${{ needs.prepare.outputs.node-pm-version }}
       build-path: |
         public/build
         public/css

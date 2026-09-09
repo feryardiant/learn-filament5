@@ -44,6 +44,8 @@ jobs:
     with:
       artifact-name: build-staging
       build-args: |
+        BASE_OS=${{ vars.BASE_OS || 'alpine' }}
+        BASE_VERSION=${{ vars.BASE_VERSION || '3.23' }}
         PHP_VERSION=${{ vars.PHP_VERSION || '8.5' }}
       docker-file: docker/staging/Dockerfile
       image-tag: ${{ needs.prepare.outputs.project-version }}
