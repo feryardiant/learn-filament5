@@ -16,6 +16,8 @@ services:
     ports:
       - ${APP_PORT:-8080}:8080
       - ${DEV_PORT:-5173}:5173
+    extra_hosts:
+      - host.docker.internal:host-gateway
     labels:
       dev.orbstack.http-port: 8080
     volumes:
