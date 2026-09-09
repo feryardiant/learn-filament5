@@ -1,0 +1,59 @@
+name: Distribute
+run-name: 'dist(${{ github.event.workflow_run.head_branch }}): docker build for `${{ github.event.workflow_run.head_sha }}`'
+
+on:
+  workflow_run:
+    # branches: [main]
+    types: [completed]
+    workflows: [Tests]
+
+jobs:
+  prepare:
+    name: Prepare
+    uses: projek-xyz/actions/.github/workflows/configure.yml@enhance-builds
+    with:
+      php-version: ${{ vars.PHP_VERSION || '8.5' }}
+
+    permissions:
+      contents: read
+      pull-requests: write
+
+  build:
+    name: Build
+    needs: [prepare]
+    uses: projek-xyz/actions/.github/workflows/build.yml@enhance-builds
+    with:
+      target-env: staging
+      branch: ${{ needs.prepare.outputs.target-branch }}
+      composer-cache-dir: ${{ needs.prepare.outputs.composer-cache-dir }}
+      build-path: |
+        public/build
+        public/css
+        public/fonts
+        public/js
+        public/vendor
+
+    permissions:
+      contents: read
+
+  docker:
+    name: Build Docker Images
+    needs: [prepare, build]
+    if: needs.prepare.outputs.should-build == '1'
+    uses: projek-xyz/actions/.github/workflows/docker.yml@enhance-builds
+    with:
+      artifact-name: build-staging
+      build-args: |
+        PHP_VERSION=${{ vars.PHP_VERSION || '8.5' }}
+      docker-file: docker/staging/Dockerfile
+      image-tag: ${{ needs.prepare.outputs.project-version }}
+      image-slug: ${{ needs.prepare.outputs.branch-slug }}
+      image-labels: |
+        org.opencontainers.image.author=${{ github.repository_owner }}
+        org.opencontainers.image.licenses=MIT
+
+    permissions:
+      contents: read
+      packages: write
+      id-token: write
+      attestations: write
