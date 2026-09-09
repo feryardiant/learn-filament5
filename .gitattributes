@@ -1,0 +1,27 @@
+* text=auto eol=lf
+
+*.blade.php diff=html
+*.css diff=css
+*.html diff=html
+*.md diff=markdown
+*.php diff=php
+
+# Excluded files & directory when running `git archive`
+.agents         export-ignore
+.editorconfig   export-ignore
+.env.example    export-ignore
+.gitattributes  export-ignore
+.github         export-ignore
+.gitignore      export-ignore
+.zed            export-ignore
+AGENTS.md       export-ignore
+CHANGELOG.md    export-ignore
+boost.json      export-ignore
+opencode.json   export-ignore
+pint.json       export-ignore
+pnpm-*.yaml     export-ignore
+phpstan.neon    export-ignore
+phpunit.xml     export-ignore
+tests           export-ignore
+*.config.js     export-ignore
+*.config.ts     export-ignore

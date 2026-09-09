@@ -1,0 +1,62 @@
+# Generic
+# --------------------------
+Thumbs.db
+Desktop.ini
+.DS_Store
+.directory
+._*
+*.DS_Store
+*.log
+*.key
+*.pem
+*.old
+*.tmp
+
+# Caches
+.cache
+*.cache
+*~
+
+# IDE Project Configurations
+# --------------------------
+.idea
+.project
+.settings
+.vscode
+_ide_helper.php
+*.sublime-*
+
+# Development
+# --------------------------
+.env
+.env.*
+node_modules
+public/build
+public/fonts-manifest.dev.json
+public/hot
+public/storage
+tests/coverage
+vendor
+
+# AI Agents
+.agents
+.claude
+.mcp.json
+boost.json
+opencode.json
+AGENTS.md
+CLAUDE.md
+
+# Package managers
+.npmrc
+.pnpm-store
+bun.lock
+bun.lockb
+package-lock.json
+yarn.lock
+
+# But Keep these
+# --------------------------
+!.env.example
+!.env.*.example
+!.gitkeep
