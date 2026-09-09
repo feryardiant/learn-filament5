@@ -18,6 +18,9 @@ services:
       - ${DEV_PORT:-5173}:5173
     extra_hosts:
       - host.docker.internal:host-gateway
+    environment:
+      AUTORUN_LARAVEL_MIGRATION: true
+      AUTORUN_LARAVEL_MIGRATION_SEED: true
     labels:
       dev.orbstack.http-port: 8080
     volumes:
@@ -41,7 +44,7 @@ services:
 
 networks:
   default:
-    name: workorder-dev
+    name: learn-filament5
     enable_ipv6: false
 
 volumes:

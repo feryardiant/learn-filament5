@@ -13,6 +13,9 @@ services:
         BASE_OS: ${BASE_OS:-alpine}
         BASE_VERSION: ${BASE_VERSION:-3.23}
     image: ghcr.io/feryardiant/learn-filament5:staging
+    environment:
+      AUTORUN_LARAVEL_MIGRATION: true
+      AUTORUN_LARAVEL_MIGRATION_SEED: true
     ports:
       - ${APP_PORT:-8080}:8080
 
@@ -20,7 +23,7 @@ services:
     extends:
       file: docker/compose.yaml
       service: worker
-    container_name: workorder-scheduler
+    container_name: learn-filament5-scheduler
     command: [php, /var/www/html/artisan, schedule:work]
     healthcheck:
       test: [CMD, healthcheck-schedule]
@@ -29,7 +32,7 @@ services:
     extends:
       file: docker/compose.yaml
       service: worker
-    container_name: workorder-queue
+    container_name: learn-filament5-queue
     command: [php, /var/www/html/artisan, queue:work, --tries=3]
     healthcheck:
       test: [CMD, healthcheck-queue]
@@ -46,5 +49,5 @@ services:
 
 networks:
   default:
-    name: workorder-dev
+    name: learn-filament5
     enable_ipv6: false
