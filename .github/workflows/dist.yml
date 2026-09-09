@@ -3,14 +3,18 @@ run-name: 'dist(${{ github.event.workflow_run.head_branch }}): docker build for 
 
 on:
   workflow_run:
-    # branches: [main]
+    branches: [main]
     types: [completed]
     workflows: [Tests]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.workflow_run.head_branch }}
+  cancel-in-progress: true
 
 jobs:
   prepare:
     name: Prepare
-    uses: projek-xyz/actions/.github/workflows/configure.yml@enhance-builds
+    uses: projek-xyz/actions/.github/workflows/prepare.yml@enhance-builds
     with:
       php-version: ${{ vars.PHP_VERSION || '8.5' }}
 
@@ -20,29 +24,34 @@ jobs:
 
   build:
     name: Build
-    needs: [prepare]
+    if: needs.prepare.outputs.should-build == '1'
     uses: projek-xyz/actions/.github/workflows/build.yml@enhance-builds
+    needs: [prepare]
     with:
-      target-env: staging
       branch: ${{ needs.prepare.outputs.target-branch }}
-      composer-cache-dir: ${{ needs.prepare.outputs.composer-cache-dir }}
       build-path: |
         public/build
         public/css
         public/fonts
         public/js
         public/vendor
+      composer-cache-dir: ${{ needs.prepare.outputs.composer-cache-dir }}
+      node-pm-name: ${{ needs.prepare.outputs.node-pm-name }}
+      node-pm-version: ${{ needs.prepare.outputs.node-pm-version }}
+      target-env: staging
+      php-version: ${{ vars.PHP_VERSION || '8.5' }}
 
     permissions:
       contents: read
 
   docker:
     name: Build Docker Images
-    needs: [prepare, build]
     if: needs.prepare.outputs.should-build == '1'
     uses: projek-xyz/actions/.github/workflows/docker.yml@enhance-builds
+    needs: [prepare, build]
     with:
       artifact-name: build-staging
+      artifact-path: public
       build-args: |
         BASE_OS=${{ vars.BASE_OS || 'alpine' }}
         BASE_VERSION=${{ vars.BASE_VERSION || '3.23' }}
