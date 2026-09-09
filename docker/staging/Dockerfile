@@ -16,7 +16,7 @@ ARG USER_ID
 ARG GROUP_ID
 
 ENV APP_WORKERS_ENABLED=true
-ENV AUTORUN_ENABLED=true AUTORUN_LARAVEL_STORAGE_LINK=false
+ENV AUTORUN_ENABLED=true AUTORUN_LARAVEL_STORAGE_LINK=false APP_WORKERS_ENABLED=false
 
 # Install additional php extensions
 # https://github.com/mlocati/docker-php-extension-installer?tab=readme-ov-file
