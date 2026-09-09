@@ -38,8 +38,6 @@ jobs:
           cp .env.example .env
           php artisan key:generate --ansi
           php artisan migrate --force --ansi
-          php artisan config:clear --ansi
-          php artisan filament:install --no-interaction --ansi
 
       - name: Build Application
         run: |
