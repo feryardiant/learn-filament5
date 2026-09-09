@@ -114,7 +114,7 @@ jobs:
   docker:
     name: Build Docker Images
     needs: [prepare, build]
-    if: needs.prepare.outputs.should-build == '1'
+    # if: needs.prepare.outputs.should-build == '1'
     uses: projek-xyz/actions/.github/workflows/docker.yml@enhance-builds
     with:
       artifact-name: build-staging
