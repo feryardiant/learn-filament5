@@ -7,8 +7,6 @@ services:
       context: .
       dockerfile: docker/staging/Dockerfile
       args:
-        USER_ID: ${WWW_USER:-$(id -u)}
-        GROUP_ID: ${WWW_GROUP:-$(id -g)}
         PHP_VERSION: ${PHP_VERSION:-8.5}
         BASE_OS: ${BASE_OS:-alpine}
         BASE_VERSION: ${BASE_VERSION:-3.23}
