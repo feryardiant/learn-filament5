@@ -15,16 +15,21 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
+        $this->initUsers();
+    }
+
+    private function initUsers(): void
+    {
+        if (User::query()->count() > 0) {
+            return;
+        }
+
         // User::factory(10)->create();
 
         // The staging compose file re-runs seeds on every container start
-        // (AUTORUN_LARAVEL_MIGRATION_SEED=true), so this must stay idempotent.
-        User::query()->updateOrCreate(
-            ['email' => 'test@example.com'],
-            [
-                'name' => 'Test User',
-                'password' => 'password', // hashed by the model's "hashed" cast
-            ],
-        );
+        User::factory()->create([
+            'name' => 'Test User',
+            'email' => 'test@example.com',
+        ]);
     }
 }
