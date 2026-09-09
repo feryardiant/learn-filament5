@@ -45,9 +45,28 @@ jobs:
 
     env:
       PHP_VERSION: ${{ vars.PHP_VERSION || '8.5' }}
+      DB_CONNECTION: pgsql
+      DB_DATABASE: ${{ github.repository_owner }}
+      DB_USERNAME: ${{ github.repository_owner }}
+      DB_PASSWORD: secret
 
     permissions:
       contents: read
+
+    services:
+      pgsql:
+        image: postgres:15
+        env:
+          POSTGRES_DB: ${{ env.DB_DATABASE }}
+          POSTGRES_USER: ${{ env.DB_USERNAME }}
+          POSTGRES_PASSWORD: ${{ env.DB_PASSWORD }}
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd=pg_isready
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=3
 
     steps:
       - name: Checkout code
@@ -78,7 +97,7 @@ jobs:
       - name: Setup Application
         run: |
           composer install --prefer-dist --no-interaction --no-progress --ansi
-          cp .env.example .env
+          cp .github/.env.example .env
           php artisan key:generate --ansi
           php artisan migrate --force --ansi
 
