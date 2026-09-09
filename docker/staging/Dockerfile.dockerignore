@@ -19,11 +19,14 @@ storage/pail
 # 2. Ignore build and tests config files/directories we don't need
 .agents
 .devcontainer
+.vite-hooks
+.tool-versions
 .dockerignore
 .pnpm-store
 .npmrc
 _ide_helper.php
 _ide_helper_models.php
+*.dockerignore
 *.config.js
 *.config.ts
 AGENTS.md
