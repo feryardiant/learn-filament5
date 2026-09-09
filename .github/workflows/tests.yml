@@ -22,17 +22,18 @@ jobs:
     needs: [prepare]
     uses: projek-xyz/actions/.github/workflows/build.yml@enhance-builds
     with:
-      target-env: staging
       branch: ${{ needs.prepare.outputs.target-branch }}
-      composer-cache-dir: ${{ needs.prepare.outputs.composer-cache-dir }}
-      node-pm-name: ${{ needs.prepare.outputs.node-pm-name }}
-      node-pm-version: ${{ needs.prepare.outputs.node-pm-version }}
       build-path: |
         public/build
         public/css
         public/fonts
         public/js
         public/vendor
+      composer-cache-dir: ${{ needs.prepare.outputs.composer-cache-dir }}
+      node-pm-name: ${{ needs.prepare.outputs.node-pm-name }}
+      node-pm-version: ${{ needs.prepare.outputs.node-pm-version }}
+      target-env: staging
+      php-version: ${{ vars.PHP_VERSION || '8.5' }}
 
     permissions:
       contents: read
