@@ -1,8 +1,8 @@
 #!/bin/sh
 
-script_name="run-dev"
+script_name="pnpm-run-dev"
 
-mkdir /etc/s6-overlay/s6-rc.d/pnpm-run-dev/dependencies.d
+mkdir -p /etc/s6-overlay/s6-rc.d/pnpm-run-dev/dependencies.d
 touch /etc/s6-overlay/s6-rc.d/pnpm-run-dev/dependencies.d/pnpm-install
 
 # touch /etc/s6-overlay/s6-rc.d/user/contents.d/artisan-pail
