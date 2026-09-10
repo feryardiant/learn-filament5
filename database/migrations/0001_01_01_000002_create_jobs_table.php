@@ -11,17 +11,23 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('jobs', function (Blueprint $table) {
-            $table->id();
-            $table->string('queue')->index();
-            $table->longText('payload');
-            $table->unsignedSmallInteger('attempts');
-            $table->unsignedInteger('reserved_at')->nullable();
-            $table->unsignedInteger('available_at');
-            $table->unsignedInteger('created_at');
-        });
+        if (config('queue.default') === 'database') {
+            $queue = config('queue.connections.database');
 
-        Schema::create('job_batches', function (Blueprint $table) {
+            Schema::connection($queue['connection'])->create($queue['table'], function (Blueprint $table) {
+                $table->id();
+                $table->string('queue')->index();
+                $table->longText('payload');
+                $table->unsignedSmallInteger('attempts');
+                $table->unsignedInteger('reserved_at')->nullable();
+                $table->unsignedInteger('available_at');
+                $table->unsignedInteger('created_at');
+            });
+        }
+
+        $batching = config('queue.batching');
+
+        Schema::connection($batching['database'])->create($batching['table'], function (Blueprint $table) {
             $table->string('id')->primary();
             $table->string('name');
             $table->integer('total_jobs');
@@ -34,7 +40,9 @@ return new class extends Migration
             $table->integer('finished_at')->nullable();
         });
 
-        Schema::create('failed_jobs', function (Blueprint $table) {
+        $failed = config('queue.failed');
+
+        Schema::connection($failed['database'])->create($failed['table'], function (Blueprint $table) {
             $table->id();
             $table->string('uuid')->unique();
             $table->string('connection');
@@ -52,8 +60,15 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('jobs');
-        Schema::dropIfExists('job_batches');
-        Schema::dropIfExists('failed_jobs');
+        if (config('queue.default') === 'database') {
+            $queue = config('queue.connections.database');
+            Schema::connection($queue['connection'])->dropIfExists($queue['table']);
+        }
+
+        $batching = config('queue.batching');
+        Schema::connection($batching['database'])->dropIfExists($batching['table']);
+
+        $failed = config('queue.failed');
+        Schema::connection($failed['database'])->dropIfExists($failed['table']);
     }
 };
