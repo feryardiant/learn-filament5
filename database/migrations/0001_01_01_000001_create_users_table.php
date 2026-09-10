@@ -26,19 +26,6 @@ return new class extends Migration
             $table->string('token');
             $table->timestamp('created_at')->nullable();
         });
-
-        $session = config('session');
-
-        if ($session['driver'] === 'database') {
-            Schema::connection($session['connection'])->create($session['table'], function (Blueprint $table) {
-                $table->string('id')->primary();
-                $table->foreignId('user_id')->nullable()->constrained('users')->nullOnDelete();
-                $table->string('ip_address', 45)->nullable();
-                $table->text('user_agent')->nullable();
-                $table->longText('payload');
-                $table->integer('last_activity')->index();
-            });
-        }
     }
 
     /**
@@ -48,11 +35,5 @@ return new class extends Migration
     {
         Schema::dropIfExists('users');
         Schema::dropIfExists(config('auth.passwords.users.table'));
-
-        $session = config('session');
-
-        if ($session['driver'] === 'database') {
-            Schema::connection($session['connection'])->dropIfExists($session['table']);
-        }
     }
 };

@@ -7,14 +7,18 @@ use Illuminate\Support\Facades\Schema;
 return new class extends Migration
 {
     /**
+     * Determine whether the migration should run.
+     */
+    public function shouldRun(): bool
+    {
+        return config('cache.default') === 'database';
+    }
+
+    /**
      * Run the migrations.
      */
     public function up(): void
     {
-        if (config('cache.default') !== 'database') {
-            return;
-        }
-
         $cache = config('cache.stores.database');
 
         Schema::connection($cache['connection'])->create($cache['table'], function (Blueprint $table) {
@@ -35,10 +39,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        if (config('cache.default') !== 'database') {
-            return;
-        }
-
         $cache = config('cache.stores.database');
 
         Schema::connection($cache['connection'])->dropIfExists($cache['table']);
