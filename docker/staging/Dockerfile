@@ -10,10 +10,8 @@ FROM serversideup/php:${PHP_VERSION}-fpm-nginx-${BASE_OS}${BASE_VERSION} AS base
 
 USER root
 
-ENV APP_WORKERS_ENABLED=true \
-    AUTORUN_ENABLED=true \
-    AUTORUN_LARAVEL_STORAGE_LINK=false \
-    APP_WORKERS_ENABLED=false
+ENV APP_WORKERS_ENABLED=false \
+    AUTORUN_ENABLED=true AUTORUN_LARAVEL_STORAGE_LINK=false
 
 # Install additional php extensions
 # https://github.com/mlocati/docker-php-extension-installer?tab=readme-ov-file
