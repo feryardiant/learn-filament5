@@ -27,7 +27,7 @@ return new class extends Migration
             $table->bigInteger('expiration')->index();
         });
 
-        Schema::connection($cache['connection'])->create($cache['lock_table'], function (Blueprint $table) {
+        Schema::connection($cache['lock_connection'])->create($cache['lock_table'], function (Blueprint $table) {
             $table->string('key')->primary();
             $table->string('owner');
             $table->bigInteger('expiration')->index();
@@ -42,6 +42,6 @@ return new class extends Migration
         $cache = config('cache.stores.database');
 
         Schema::connection($cache['connection'])->dropIfExists($cache['table']);
-        Schema::connection($cache['connection'])->dropIfExists($cache['lock_table']);
+        Schema::connection($cache['lock_connection'])->dropIfExists($cache['lock_table']);
     }
 };
