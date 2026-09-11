@@ -7,7 +7,6 @@
         "dev": "vp dev",
         "check": "vp check",
         "check:fix": "vp check --fix",
-        "types:check": "tsc --noEmit",
         "prepare": "vp config"
     },
     "devDependencies": {
@@ -19,7 +18,6 @@
         "concurrently": "^10.0.5",
         "laravel-vite-plugin": "^3.2.0",
         "tailwindcss": "^4.3.3",
-        "typescript": "^7.0.2",
         "vite-plus": "0.3.0"
     },
     "optionalDependencies": {
