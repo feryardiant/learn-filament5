@@ -63,7 +63,7 @@ export default defineConfig(({ mode }): UserConfig => {
       // Proxy the HMR websocket on its own path so it does not collide with the
       // application's routes (see 40-vite.conf).
       hmr: { path: '/vite-hmr' },
-      cors: true,
+      cors: { origin: appUrl.origin },
       watch: {
         ignored: [
           '**/.agents/**',
