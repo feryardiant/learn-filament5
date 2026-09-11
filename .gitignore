@@ -43,6 +43,7 @@ vendor
 
 # AI Agents
 .agents
+.ai
 .claude
 .mcp.json
 boost.json

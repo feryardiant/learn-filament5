@@ -15,13 +15,13 @@ export default defineConfig({
     sortImports: true,
     singleAttributePerLine: false,
     htmlWhitespaceSensitivity: 'css',
-    ignorePatterns: ['composer.json', 'resources/views/mail/*'],
+    ignorePatterns: ['composer.json', 'resources/views/mail/*', 'tests/coverage/**'],
     sortTailwindcss: {
       entryPoint: 'resources/css/app.css',
     },
   },
   lint: {
-    ignorePatterns: ['vendor/**', 'node_modules/**', 'public/**'],
+    ignorePatterns: ['vendor/**', 'node_modules/**', 'public/**', 'tests/coverage/**'],
     jsPlugins: [{ name: 'vite-plus', specifier: 'vite-plus/oxlint-plugin' }],
     options: { denyWarnings: true, typeAware: true },
     rules: {
@@ -50,6 +50,7 @@ export default defineConfig({
         '**/.cursor/**',
         '**/.junie/**',
         '**/storage/framework/views/**',
+        '**/tests/coverage/**',
         '**/vendor/**',
       ],
     },
