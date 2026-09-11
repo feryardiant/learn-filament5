@@ -11,8 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        if (config('queue.default') === 'database') {
-            $queue = config('queue.connections.database');
+        if ($connection = $this->resolveDatabaseQueueConnection()) {
+            $queue = config('queue.connections.'.$connection);
 
             Schema::connection($queue['connection'])->create($queue['table'], function (Blueprint $table) {
                 $table->id();
@@ -60,8 +60,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        if (config('queue.default') === 'database') {
-            $queue = config('queue.connections.database');
+        if ($connection = $this->resolveDatabaseQueueConnection()) {
+            $queue = config('queue.connections.'.$connection);
             Schema::connection($queue['connection'])->dropIfExists($queue['table']);
         }
 
@@ -70,5 +70,26 @@ return new class extends Migration
 
         $failed = config('queue.failed');
         Schema::connection($failed['database'])->dropIfExists($failed['table']);
+    }
+
+    private function resolveDatabaseQueueConnection(): false|string
+    {
+        $default = config('queue.default');
+        $connections = config('queue.connections', []);
+        $connection = $connections[$default] ?? false;
+
+        if (! $connection) {
+            return false;
+        }
+
+        if ($connection['driver'] === 'failover') {
+            foreach ($connection['connections'] as $fallback) {
+                if (($connections[$fallback]['driver'] ?? null) === 'database') {
+                    return $fallback;
+                }
+            }
+        }
+
+        return $connection['driver'] === 'database' ? $default : false;
     }
 };
