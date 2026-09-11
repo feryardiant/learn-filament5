@@ -1,0 +1,16 @@
+/*
+ * Single source of truth for the application font.
+ *
+ * The font files are self-hosted from the `@fontsource-variable/inter` package
+ * (declared in package.json) and bundled by Vite. This entry is loaded both by
+ * the Filament panel (see App\Providers\Filament\FontProvider) and by regular
+ * Blade views (`@vite('resources/css/fonts.css')`), so there is only one place
+ * where the font is defined.
+ */
+@import '@fontsource-variable/inter/wght.css';
+
+:root {
+  --font-inter:
+    'Inter Variable', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol',
+    'Noto Color Emoji';
+}
