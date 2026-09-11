@@ -61,7 +61,7 @@ export default defineConfig(({ mode }): UserConfig => {
       // Vite answers every proxied request with 403.
       allowedHosts: [appUrl.hostname],
       // Proxy the HMR websocket on its own path so it does not collide with the
-      // application's routes (see 40-vite.conf).
+      // application's routes (see docker/development/nginx/vite.conf).
       hmr: { path: '/vite-hmr' },
       cors: { origin: appUrl.origin },
       watch: {
