@@ -96,12 +96,17 @@ $systemConnection = env('DB_SYSTEM_CONNECTION', 'system');
 // Derive the connection that hosts framework tables from the default connection.
 // For PostgreSQL both schemas live in the same database, differentiated by `search_path`.
 // MySQL/MariaDB and SQLite (a separate database/file) can be added here later.
-$connections[$systemConnection] = match ($connections[$defaultConnection]['driver'] ?? null) {
-    'pgsql' => array_merge($connections[$defaultConnection], [
-        'search_path' => env('DB_SCHEMA_SYSTEM', 'system'),
-    ]),
-    default => [],
-};
+//
+// When both names are equal there is no split, so the default connection must be
+// left untouched rather than overwritten with the system `search_path`.
+if ($systemConnection !== $defaultConnection) {
+    $connections[$systemConnection] = match ($connections[$defaultConnection]['driver'] ?? null) {
+        'pgsql' => array_merge($connections[$defaultConnection], [
+            'search_path' => env('DB_SCHEMA_SYSTEM', 'system'),
+        ]),
+        default => [],
+    };
+}
 
 return [
 

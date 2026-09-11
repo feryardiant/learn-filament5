@@ -10,10 +10,6 @@ return new class extends Migration
      */
     public function up(): void
     {
-        if (! $this->shouldCreateSystemSchema()) {
-            return;
-        }
-
         $schema = $this->systemSchema();
 
         DB::statement('DROP SCHEMA IF EXISTS "'.$schema.'" CASCADE');
@@ -25,19 +21,18 @@ return new class extends Migration
      */
     public function down(): void
     {
-        if (! $this->shouldCreateSystemSchema()) {
-            return;
-        }
-
         DB::statement('DROP SCHEMA IF EXISTS "'.$this->systemSchema().'" CASCADE');
     }
 
     /**
-     * Whether a separate system schema is configured.
+     * Determine whether the migration should run.
      */
-    protected function shouldCreateSystemSchema(): bool
+    public function shouldRun(): bool
     {
-        return config('database.default') !== config('database.system');
+        $config = config('database');
+        $default = $config['default'];
+
+        return $config['connections'][$default]['driver'] === 'pgsql' && $default !== $config['system'];
     }
 
     /**
