@@ -16,13 +16,13 @@ ENV APP_WORKERS_ENABLED=false \
 # Install additional php extensions
 # https://github.com/mlocati/docker-php-extension-installer?tab=readme-ov-file
 RUN install-php-extensions excimer gd intl && \
-    chown www-data:www-data /etc/s6-overlay/s6-rc.d/user/contents.d && \
+    chown www-data:www-data /etc/s6-overlay/user-bundles.d/user/contents.d && \
     mv /usr/local/etc/php/conf.d/serversideup-docker-php.ini /usr/local/etc/php/php.ini
 
 COPY --chmod=755 docker/common/entrypoint.d/ /etc/entrypoint.d/
-COPY --chmod=755 docker/common/s6-overlay/ /etc/s6-overlay/s6-rc.d/
+COPY --chmod=755 docker/common/s6-overlay/ /etc/s6-overlay/user-bundles.d/
 # COPY --chown=www-data:www-data --chmod=755 docker/staging/entrypoint.d/ /etc/entrypoint.d/
-# COPY --chown=www-data:www-data --chmod=755 docker/staging/s6-overlay/ /etc/s6-overlay/s6-rc.d/
+# COPY --chown=www-data:www-data --chmod=755 docker/staging/s6-overlay/ /etc/s6-overlay/user-bundles.d/
 COPY --chown=www-data:www-data docker/common/nginx/*.conf /etc/nginx/server-opts.d/
 # COPY --chown=www-data:www-data docker/staging/nginx/*.conf /etc/nginx/server-opts.d/
 
