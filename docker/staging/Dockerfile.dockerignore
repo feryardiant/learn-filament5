@@ -40,7 +40,7 @@ phpunit.xml
 phpunit.*.xml
 pint.json
 package-lock.json
-pnpm-lock.yaml
+pnpm-*.yaml
 jsconfig.json
 tsconfig.json
 tests
