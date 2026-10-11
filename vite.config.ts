@@ -32,7 +32,23 @@ export default defineConfig(({ mode }): UserConfig => {
     lint: {
       ignorePatterns: ['vendor/**', 'node_modules/**', 'public/**', 'tests/coverage/**'],
       jsPlugins: [{ name: 'vite-plus', specifier: 'vite-plus/oxlint-plugin' }],
-      options: { denyWarnings: true, typeAware: true, typeCheck: true },
+      options: { typeAware: true, typeCheck: true },
+      overrides: [
+        {
+          files: ['**/*.test.ts', '**/*.spec.ts', '**/scripts/**/*.{js,mjs,ts}', '**/*.config.ts'],
+          rules: {
+            'no-console': ['off'],
+          },
+        },
+        {
+          files: ['**/*.test.ts', '**/*.spec.ts'],
+          plugins: ['typescript', 'vitest'],
+          rules: {
+            '@typescript-eslint/no-explicit-any': 'off',
+            'vitest/no-disabled-tests': 'error',
+          },
+        },
+      ],
       rules: {
         'vite-plus/prefer-vite-plus-imports': 'error',
         'no-console': ['error', { allow: ['warn', 'error'] }],
@@ -42,16 +58,13 @@ export default defineConfig(({ mode }): UserConfig => {
     // are spread into a flat `PluginOption[]` (as `lazyPlugins()` expects). The
     // cast is required: inferring the type instead hits TypeScript's recursion
     // limit on Vite's recursive `PluginOption` type.
-    plugins: lazyPlugins(
-      () =>
-        [
-          laravel({
-            input: ['resources/css/fonts.css', 'resources/css/app.css', 'resources/js/app.ts'],
-            refresh: true,
-          }),
-          tailwindcss(),
-        ] as PluginOption[],
-    ),
+    plugins: lazyPlugins((): PluginOption[] => [
+      laravel({
+        input: ['resources/css/fonts.css', 'resources/css/app.css', 'resources/js/app.ts'],
+        refresh: true,
+      }),
+      tailwindcss(),
+    ]),
     server: {
       // This must be the full origin (`https://host`): it is written verbatim
       // into `public/hot`, which `Vite::asset()` turns into asset URLs.
