@@ -1,3 +1,4 @@
-plans
-skills
-specs
+*
+!.gitignore
+!rules/
+!rules/**

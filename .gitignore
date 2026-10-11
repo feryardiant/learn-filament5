@@ -46,7 +46,7 @@ vendor
 .ai
 .claude
 .mcp.json
-boost.json
+# boost.json
 # opencode.json
 # AGENTS.md
 CLAUDE.md
