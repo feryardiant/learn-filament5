@@ -11,6 +11,7 @@ services:
         BASE_OS: ${BASE_OS:-alpine}
         BASE_VERSION: ${BASE_VERSION:-3.23}
     image: ghcr.io/feryardiant/learn-filament5:local
+    pull_policy: never
     ports:
       - ${APP_PORT:-8080}:8080
       - ${DEV_PORT:-5173}:5173
