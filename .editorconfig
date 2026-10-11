@@ -11,8 +11,5 @@ trim_trailing_whitespace = true
 [*.md]
 trim_trailing_whitespace = false
 
-[.{vscode,zed}/*.json]
-indent_size = 2
-
-[*.{css,js,jsx,ts,tsx,svg,yml,yaml}]
+[*.{css,json,js,jsx,ts,tsx,svg,yml,yaml}]
 indent_size = 2
