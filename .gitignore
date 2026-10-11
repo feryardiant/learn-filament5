@@ -54,6 +54,7 @@ CLAUDE.md
 # Package managers
 .npmrc
 .pnpm-store
+.vitest
 bun.lock
 bun.lockb
 package-lock.json
