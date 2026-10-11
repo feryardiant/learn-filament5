@@ -1,14 +1,14 @@
 // Project-local settings
 // See https://zed.dev/docs/configuring-zed#settings-files for the full Tasks Hooks documentation.
 {
+  "code_actions_on_format": {
+    "source.fixAll.oxc": true
+  },
   "context_servers": {
     "laravel-boost": {
       "command": "php",
       "args": ["artisan", "boost:mcp"]
     }
-  },
-  "code_actions_on_format": {
-    "source.fixAll.oxc": true
   },
   "format_on_save": "on",
   "formatter": [
