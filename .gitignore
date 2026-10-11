@@ -42,13 +42,13 @@ tests/coverage
 vendor
 
 # AI Agents
-.agents
+# .agents
 .ai
 .claude
 .mcp.json
 boost.json
-opencode.json
-AGENTS.md
+# opencode.json
+# AGENTS.md
 CLAUDE.md
 
 # Package managers
