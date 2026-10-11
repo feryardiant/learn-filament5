@@ -13,6 +13,8 @@
 .gitattributes  export-ignore
 .github         export-ignore
 .gitignore      export-ignore
+.tool-versions  export-ignore
+.vite-hooks     export-ignore
 .zed            export-ignore
 AGENTS.md       export-ignore
 CHANGELOG.md    export-ignore
