@@ -83,7 +83,7 @@
     ],
     "post-root-package-install": [
       "@php -r \"file_exists('.env') || copy('.env.example', '.env');\"",
-      "@php -r \"is_dir('.ai') || symlink('.ai', '.agents');\""
+      "@php -r \"is_link('.ai') || symlink('.agents', '.ai');\""
     ],
     "post-create-project-cmd": [
       "@php artisan key:generate --ansi",
