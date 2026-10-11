@@ -32,4 +32,4 @@ done
 cd "$ZED_WORKTREE_ROOT" || exit 0
 
 composer install --no-interaction
-npm ci
+pnpm i
