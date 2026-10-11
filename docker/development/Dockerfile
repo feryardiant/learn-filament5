@@ -20,9 +20,9 @@ RUN install-php-extensions excimer gd intl sockets xdebug && \
     mv /usr/local/etc/php/conf.d/serversideup-docker-php.ini /usr/local/etc/php/php.ini
 
 COPY --chmod=755 docker/common/entrypoint.d/ /etc/entrypoint.d/
-COPY --chmod=755 docker/common/s6-overlay/ /etc/s6-overlay/user-bundles.d/
+COPY --chmod=755 docker/common/s6-overlay/ /etc/s6-overlay/s6-rc.d/
 COPY --chown=www-data:www-data --chmod=755 docker/development/entrypoint.d/ /etc/entrypoint.d/
-COPY --chown=www-data:www-data --chmod=755 docker/development/s6-overlay/ /etc/s6-overlay/user-bundles.d/
+COPY --chown=www-data:www-data --chmod=755 docker/development/s6-overlay/ /etc/s6-overlay/s6-rc.d/
 COPY --chown=www-data:www-data docker/common/nginx/*.conf /etc/nginx/server-opts.d/
 COPY --chown=www-data:www-data docker/development/nginx/*.conf /etc/nginx/server-opts.d/
 COPY docker/development/php/*.ini /usr/local/etc/php/conf.d/
