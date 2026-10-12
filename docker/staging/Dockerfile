@@ -49,7 +49,7 @@ RUN find . -type f \( -not -name artisan -and -not -path './vendor/bin/*' \) -ex
 # Clean up
 RUN rm -rf docker && find vendor \( -name 'docs' -or -name '.*' \) -exec rm -rf {} + && \
     find vendor -type f \( -name '*.md' -and -not -name 'LICENSE.md' \) -exec rm {} + && \
-    find vendor -type d -path '*/lang/*' -and \( -not -name id -and -not -name en \) -exec rm -rf {} +
+    find vendor -type d -path '*/lang/*' -and \( -not -path '*/id*' -and -not -path '*/en*' \) -exec rm -rf {} +
 
 VOLUME ["${APP_BASE_DIR}/storage/app"]
 
