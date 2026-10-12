@@ -25,7 +25,7 @@ services:
       LARAVEL_SAIL: 1
       TZ: Asia/Jakarta
     healthcheck:
-      test: [CMD, curl, -ksLfS, http://localhost:8080/up]
+      test: [CMD-SHELL, 'curl -ksLfS http://localhost:8080$$HEALTHCHECK_PATH']
       <<: *healthcheck
     deploy: *deploy
 

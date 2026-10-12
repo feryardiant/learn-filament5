@@ -2,4 +2,5 @@
 
 # Use with-contenv to ensure environment variables are available
 with-contenv
-artisan queue:listen --tries=1 --timeout=0
+cd /var/www/html
+php artisan schedule:work --whisper
