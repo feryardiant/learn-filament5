@@ -11,18 +11,19 @@ FROM serversideup/php:${PHP_VERSION}-fpm-nginx-${BASE_OS}${BASE_VERSION} AS base
 USER root
 
 ENV APP_WORKERS_ENABLED=false \
-    AUTORUN_ENABLED=true AUTORUN_LARAVEL_STORAGE_LINK=false
+    AUTORUN_ENABLED=true AUTORUN_LARAVEL_STORAGE_LINK=false \
+    HEALTHCHECK_PATH=/up PHP_OPCACHE_ENABLE=1 SSL_MODE=off
 
 # Install additional php extensions
 # https://github.com/mlocati/docker-php-extension-installer?tab=readme-ov-file
 RUN install-php-extensions excimer gd intl && \
-    chown www-data:www-data /etc/s6-overlay/user-bundles.d/user/contents.d && \
+    chown www-data:www-data /etc/s6-overlay/user-bundles.d/*/contents.d && \
     mv /usr/local/etc/php/conf.d/serversideup-docker-php.ini /usr/local/etc/php/php.ini
 
 COPY --chmod=755 docker/common/entrypoint.d/ /etc/entrypoint.d/
 COPY --chmod=755 docker/common/s6-overlay/ /etc/s6-overlay/s6-rc.d/
-# COPY --chown=www-data:www-data --chmod=755 docker/staging/entrypoint.d/ /etc/entrypoint.d/
-# COPY --chown=www-data:www-data --chmod=755 docker/staging/s6-overlay/ /etc/s6-overlay/s6-rc.d/
+# COPY --chmod=755 docker/staging/entrypoint.d/ /etc/entrypoint.d/
+# COPY --chmod=755 docker/staging/s6-overlay/ /etc/s6-overlay/s6-rc.d/
 COPY --chown=www-data:www-data docker/common/nginx/*.conf /etc/nginx/server-opts.d/
 # COPY --chown=www-data:www-data docker/staging/nginx/*.conf /etc/nginx/server-opts.d/
 
@@ -30,8 +31,6 @@ COPY --chown=www-data:www-data docker/common/nginx/*.conf /etc/nginx/server-opts
 # Deployment Image
 ############################################
 FROM base AS deploy
-
-ENV SSL_MODE=off PHP_OPCACHE_ENABLE=1
 
 USER www-data
 WORKDIR ${APP_BASE_DIR}
@@ -50,3 +49,6 @@ RUN composer install --optimize-autoloader --no-interaction --no-progress --no-d
     find vendor -type f \( -name '*.md' -and -not -name 'LICENSE.md' \) -exec rm {} +
 
 VOLUME ["${APP_BASE_DIR}/storage/app"]
+
+HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
+    CMD curl -ksLfS http://127.0.0.1:8080$HEALTHCHECK_PATH || exit 1
