@@ -9,7 +9,7 @@ paths:
 
 There is no host-side execution. Do not run `php`, `composer` or `pnpm` on the machine — run everything inside the app container, e.g. `docker compose exec app php artisan test`, `docker compose exec app pnpm build`, `docker compose exec app composer lint`.
 
-Files under `docker/` are baked into the image by each environment's Dockerfile (`docker/<env>/Dockerfile`); `docker/common/` is shared by all environments and `docker/<env>/` overrides it. Do not bind-mount docker/ config from `docker-compose.yaml` — edit the file, then `docker compose build app` and `docker compose up -d --force-recreate app`.
+Files under `docker/common/` and `docker/<env>/` that are copied by the environment Dockerfile are baked into the image; `docker/common/` is shared by all environments and `docker/<env>/` overrides it. Rebuild the app image after changing these files or the environment Dockerfile. Changes to `docker/compose.yaml` affect Compose configuration only; recreate the affected services without rebuilding the image.
 
 ## Environment-specific config overrides
 
@@ -20,7 +20,7 @@ Each environment can layer its own config over `docker/common/`; both share the 
 - source: `docker/<env>/php/`, target: `/usr/local/etc/php/conf.d/`
 - source: `docker/<env>/s6-overlay/`, target: `/etc/s6-overlay/s6-rc.d/`
 
-A missing `docker/common/<dir>/` means no shared config; a missing `docker/<env>/<dir>/` means the base image's defaults apply. Either way, the matching `COPY` line in the environment's Dockerfile must be removed or commented out too — Docker fails the build when a `COPY` source doesn't exist (an empty glob like `nginx/*.conf` counts too).
+A missing `docker/common/<dir>/` means no shared config. A missing `docker/<env>/<dir>/` leaves the shared layer in place, if present; base-image defaults apply only when neither layer supplies configuration. Either way, the matching `COPY` line in the environment's Dockerfile must be removed or commented out too — Docker fails the build when a `COPY` source doesn't exist (an empty glob like `nginx/*.conf` counts too).
 
 Staging intentionally overrides none of those configs (its `COPY` lines in `docker/staging/Dockerfile` are commented out, and it has no `php/` layer).
 
