@@ -38,15 +38,18 @@ WORKDIR ${APP_BASE_DIR}
 # Copy our project files into the container
 COPY --chown=www-data:www-data . .
 
-# Make sure our container has the correct permissions
-RUN find . -type f -exec chmod 644 {} + && find . -type d -exec chmod 755 {} + && \
-    chmod -R 775 bootstrap/cache && chmod +x artisan && \
-    rm -rf docker
-
 # Install composer dependencies
-RUN composer install --optimize-autoloader --no-interaction --no-progress --no-dev && \
-    find vendor -type d -name 'docs' -exec rm -rf {} + && \
-    find vendor -type f \( -name '*.md' -and -not -name 'LICENSE.md' \) -exec rm {} +
+RUN --mount=type=cache,target=/composer/cache \
+    composer install --optimize-autoloader --no-interaction --no-progress --no-dev
+
+# Make sure our container has the correct permissions
+RUN find . -type f \( -not -name artisan -and -not -path './vendor/bin/*' \) -exec chmod 644 {} + && \
+    find . -type d -exec chmod 755 {} +
+
+# Clean up
+RUN rm -rf docker && find vendor \( -name 'docs' -or -name '.*' \) -exec rm -rf {} + && \
+    find vendor -type f \( -name '*.md' -and -not -name 'LICENSE.md' \) -exec rm {} + && \
+    find vendor -type d -path '*/lang/*' -and \( -not -path '*/id*' -and -not -path '*/en*' \) -exec rm -rf {} +
 
 VOLUME ["${APP_BASE_DIR}/storage/app"]
 
