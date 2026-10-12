@@ -18,6 +18,7 @@ storage/pail
 
 # 2. Ignore build and tests config files/directories we don't need
 .agents
+.ai
 .devcontainer
 .vite-hooks
 .tool-versions
